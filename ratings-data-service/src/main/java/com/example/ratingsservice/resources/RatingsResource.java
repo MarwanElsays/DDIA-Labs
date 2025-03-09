@@ -22,4 +22,9 @@ public class RatingsResource {
         List<RatingModel> ratingsList = ratingService.getRatingsOfUser(userId);
         return UserRatingModel.builder().ratings(ratingsList).userId(userId).build();
     }
+
+    @RequestMapping("/getTop10Ratings")
+    public List<String> getTop10Ratings() {
+        return ratingService.getTop10Ratings();
+    }
 }

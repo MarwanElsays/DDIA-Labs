@@ -6,6 +6,7 @@ import com.example.ratingsservice.models.RatingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,10 +18,20 @@ public class RatingService {
     private RatingRepository ratingRepository;
 
     public List<RatingModel> getRatingsOfUser(String userId) {
-        Optional<List<Rating>> ratingList =  ratingRepository.findAllRatingsByUserId(userId);
-        return ratingList.map(ratings -> ratings.stream().map(this::ratingToRatingModel)
-                .collect(Collectors.toList()))
-                .orElse(null);
+        Optional<List<Rating>> ratingList = ratingRepository.findAllRatingsByUserId(userId);
+        return ratingList.orElse(Collections.emptyList())
+                .stream()
+                .map(this::ratingToRatingModel)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getTop10Ratings() {
+        Optional<List<Object[]>> result = ratingRepository.findTop10ByOrderByRatingValueDesc();
+
+        return result.orElse(Collections.emptyList())
+                .stream()
+                .map(row -> (String) row[0])
+                .collect(Collectors.toList());
     }
 
     private RatingModel ratingToRatingModel(Rating rating) {

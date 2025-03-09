@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package org.example.proto;
+
+service TrendingMovieService {
+  rpc GetTop10Ratings (Top10RatingsRequest) returns (Top10RatingsResponse);
+}
+
+message Top10RatingsRequest {
+  // You can add fields here if needed
+}
+
+message Top10RatingsResponse {
+  repeated string MovieIds = 1;
+}

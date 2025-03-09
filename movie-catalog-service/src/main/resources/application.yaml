@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: movie-catalog-service
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+grpc:
+  client:
+    grpc-trending-movie-service:
+      address: 'discovery:///trending-movie-service'
+      negotiationType: plaintext

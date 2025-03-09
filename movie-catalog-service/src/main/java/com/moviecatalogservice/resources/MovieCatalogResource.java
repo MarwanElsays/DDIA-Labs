@@ -5,6 +5,7 @@ import com.moviecatalogservice.models.Movie;
 import com.moviecatalogservice.models.Rating;
 import com.moviecatalogservice.models.UserRating;
 import com.moviecatalogservice.services.MovieInfoService;
+import com.moviecatalogservice.services.TrendingMovieService;
 import com.moviecatalogservice.services.UserRatingService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,13 +28,17 @@ public class MovieCatalogResource {
 
     private final UserRatingService userRatingService;
 
+    private final TrendingMovieService trendingMovieService;
+
     public MovieCatalogResource(RestTemplate restTemplate,
                                 MovieInfoService movieInfoService,
-                                UserRatingService userRatingService) {
+                                UserRatingService userRatingService,
+                                TrendingMovieService trendingMovieService) {
 
         this.restTemplate = restTemplate;
         this.movieInfoService = movieInfoService;
         this.userRatingService = userRatingService;
+        this.trendingMovieService = trendingMovieService;
     }
 
     /**
@@ -48,4 +53,10 @@ public class MovieCatalogResource {
         List<Rating> ratings = userRatingService.getUserRating(userId).getRatings();
         return ratings.stream().map(movieInfoService::getCatalogItem).collect(Collectors.toList());
     }
+
+    @RequestMapping("/getTop10Ratings")
+    public List<String> getTop10Ratings(@PathVariable String userId) {
+        return trendingMovieService.getTop10Ratings();
+    }
+
 }
