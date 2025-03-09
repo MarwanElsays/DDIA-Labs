@@ -1,22 +1,15 @@
 package com.example.ratingsservice.models;
 
+import lombok.*;
+
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRatingModel {
+    private String userId;
     private List<RatingModel> ratings;
-
-    public UserRatingModel() {
-    }
-
-    public UserRatingModel(List<RatingModel> ratings) {
-        this.ratings = ratings;
-    }
-
-    public List<RatingModel> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(List<RatingModel> ratings) {
-        this.ratings = ratings;
-    }
 }
