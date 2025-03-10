@@ -7,7 +7,8 @@ import com.example.movieinfoservice.models.MovieSummary;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
+import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieResource {
 
+    private static final String DATA_FILE = "C:\\Users\\MARWAN\\Desktop\\CSED\\Computer Engineering Year 4\\2nd Semester\\DDIA\\Labs\\Lab2\\fetch-Ids\\movie_data.csv";
     @Value("${api.key}")
     private String apiKey;
 
@@ -42,24 +44,17 @@ public class MovieResource {
         }
 
         // Get the movie info from TMDB
-        final String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey;
-        MovieSummary movieSummary = restTemplate.getForObject(url, MovieSummary.class);
+        final String url = "https://api.themoviedb.org/3/movie/" + 12 + "?api_key=" + apiKey;
+        restTemplate.getForObject(url, MovieSummary.class);
 
-        if (movieSummary != null) {
-            MovieModel movieModel = MovieModel.builder()
-                .movieId(movieId)
-                .name(movieSummary.getTitle())
-                .description(movieSummary.getOverview())
-                .build();
-
+        MovieModel movieModel = createDummyMovie(movieId);
+        if (movieModel != null) {
             Movie movie = Movie.builder()
-                .movieId(movieId)
-                .name(movieSummary.getTitle())
-                .description(movieSummary.getOverview())
-                .build();
-
+                    .movieId(movieId)
+                    .name(movieModel.getName())
+                    .description(movieModel.getDescription())
+                    .build();
             movieRepository.save(movie);
-
             return movieModel;
         }
 
@@ -80,18 +75,26 @@ public class MovieResource {
                         .description(cachedMovie.getDescription())
                         .build());
             }else{
-                final String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey;
-                MovieSummary movieSummary = restTemplate.getForObject(url, MovieSummary.class);
-
-                if (movieSummary != null) {
+//                final String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey;
+//                MovieSummary movieSummary = restTemplate.getForObject(url, MovieSummary.class);
+                MovieModel movieModel = createDummyMovie(movieId);
+                if (movieModel != null) {
                     movieModels.add(MovieModel.builder()
                             .movieId(movieId)
-                            .name(movieSummary.getTitle())
-                            .description(movieSummary.getOverview())
+                            .name(movieModel.getName())
+                            .description(movieModel.getDescription())
                             .build());
                 }
             }
         }
         return movieModels;
+    }
+
+    public MovieModel createDummyMovie(String movieId) {
+        return MovieModel.builder()
+                .movieId(movieId)
+                .name("Dummy Movie")
+                .description("Dark is a German science fiction thriller streaming television series co-created by Baran bo Odar and Jantje Friese")
+                .build();
     }
 }
