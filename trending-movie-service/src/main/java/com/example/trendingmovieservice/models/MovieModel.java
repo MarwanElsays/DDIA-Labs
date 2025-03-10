@@ -7,7 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Rating {
+public class MovieModel {
     private String movieId;
-    private int rating;
+    private String name;
+    private String description;
 }

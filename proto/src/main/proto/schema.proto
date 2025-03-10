@@ -10,6 +10,12 @@ message Top10RatingsRequest {
   // You can add fields here if needed
 }
 
+message MovieInfo {
+  string movieId = 1;
+  string name = 2;
+  string description = 3;
+}
+
 message Top10RatingsResponse {
-  repeated string MovieIds = 1;
+  repeated MovieInfo movies = 1;
 }

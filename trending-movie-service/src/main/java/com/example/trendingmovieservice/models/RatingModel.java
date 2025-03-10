@@ -1,4 +1,4 @@
-package com.moviecatalogservice.models;
+package com.example.trendingmovieservice.models;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Rating {
+public class RatingModel {
     private String movieId;
     private int rating;
 }

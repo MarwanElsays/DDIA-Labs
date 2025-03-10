@@ -5,10 +5,11 @@ import com.example.movieinfoservice.Repository.MovieRepository;
 import com.example.movieinfoservice.models.MovieModel;
 import com.example.movieinfoservice.models.MovieSummary;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
@@ -63,5 +64,34 @@ public class MovieResource {
         }
 
         return null;
+    }
+
+    @GetMapping("/getTop10MoviesInfo")
+    public List<MovieModel> getTop10MoviesInfo(@RequestParam List<String> movieIds) {
+
+        List<MovieModel> movieModels = new ArrayList<>();
+        for (String movieId : movieIds) {
+            Movie cachedMovie = movieRepository.findById(movieId).orElse(null);
+            if (cachedMovie != null) {
+                movieModels.add(MovieModel
+                        .builder()
+                        .movieId(cachedMovie.getMovieId())
+                        .name(cachedMovie.getName())
+                        .description(cachedMovie.getDescription())
+                        .build());
+            }else{
+                final String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey;
+                MovieSummary movieSummary = restTemplate.getForObject(url, MovieSummary.class);
+
+                if (movieSummary != null) {
+                    movieModels.add(MovieModel.builder()
+                            .movieId(movieId)
+                            .name(movieSummary.getTitle())
+                            .description(movieSummary.getOverview())
+                            .build());
+                }
+            }
+        }
+        return movieModels;
     }
 }

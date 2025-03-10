@@ -23,7 +23,11 @@ public class MovieInfoService {
     public CatalogItem getCatalogItem(Rating rating) {
             String movieDetailsUrl = "http://movie-info-service/movies/" + rating.getMovieId();
             Movie movie = this.restTemplate.getForObject(movieDetailsUrl, Movie.class);
-            return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
+            return CatalogItem.builder()
+                    .name(movie.getName())
+                    .description(movie.getDescription())
+                    .rating(rating.getRating())
+                    .build();
     }
 
     public CatalogItem getFallbackCatalogItem(Rating rating, Throwable throwable) {

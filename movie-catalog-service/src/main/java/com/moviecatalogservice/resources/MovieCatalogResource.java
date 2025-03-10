@@ -1,6 +1,7 @@
 package com.moviecatalogservice.resources;
 
 import com.moviecatalogservice.models.CatalogItem;
+import com.moviecatalogservice.models.Movie;
 import com.moviecatalogservice.models.Rating;
 import com.moviecatalogservice.services.MovieInfoService;
 import com.moviecatalogservice.services.TrendingMovieService;
@@ -50,7 +51,7 @@ public class MovieCatalogResource {
     }
 
     @RequestMapping("/getTop10Ratings")
-    public List<String> getTop10Ratings() {
+    public List<Movie> getTop10Ratings() {
         return trendingMovieService.getTop10Ratings();
     }
 
