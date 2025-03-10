@@ -5,14 +5,43 @@ spring:
 server:
   port: 8081
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: hystrix.stream
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 
 grpc:
   client:
-    grpc-trending-movie-service:
+    trending-movie-service:
       address: 'discovery:///trending-movie-service'
       negotiationType: plaintext
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      movieInfoService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+      userRatingService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+  timelimiter:
+    instances:
+      movieInfoService:
+        timeoutDuration: 2s
+      userRatingService:
+        timeoutDuration: 2s

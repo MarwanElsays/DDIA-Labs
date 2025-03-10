@@ -8,6 +8,7 @@ grpc:
 
 eureka:
   instance:
+    hostname: trending-movie-service
     preferIpAddress: true
   client:
     registerWithEureka: true
